@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="liwenxin-jam's blog"><meta name="keywords" content="liwenxin, jam, blog, 个人博客"><title>Vue的旁门左道 | 前端工程狮_jam</title><link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Vue的旁门左道</h1><a id="logo" href="/.">前端工程狮_jam</a><p class="description">人都会成长，过程在自己</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="请输入关键字"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">Vue的旁门左道</h1><div class="post-meta"><p><span class="date">Aug 11, 2021</span><span><a href="/categories/vue/" class="category">vue</a></span></p></div><div class="post-content"><p>基于【尚硅谷】Web前端迅速上手Vue教程丨vue3.0入门到精通，记录相关知识点，达到备忘录的目的</p>
+<h2 id="风格指南"><a href="#风格指南" class="headerlink" title="风格指南"></a>风格指南</h2><ul>
+<li><a href="https://cn.vuejs.org/v2/style-guide/" target="_blank" rel="noopener">风格指南</a>推荐</li>
+</ul>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><ul>
+<li>如出现下载缓慢请配置npm淘宝镜像</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br><span class="line">npm view vue versions</span><br><span class="line">nanoid(唯一ID)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Vue-Cli脚手架隐藏了所有webpack相关的配置，若想查看具体的webpack配置</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue inspect &gt; output.js</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>vue-tools </p>
+<p>谷歌插件<a href="https://chrome.google.com/webstore/detail/vuejs-devtools/ljjemllljcmogpfapbkkighbhhppjdbg?utm_source=chrome-ntp-icon" target="_blank" rel="noopener">Vue.js devtools</a>，注意beta版才支持vue3，以前的只支持vue2</p>
+<ol>
+<li>开启允许访问文件网址</li>
+<li>收集各项错误</li>
+</ol>
+</li>
+</ul>
+<h2 id="vm与vc"><a href="#vm与vc" class="headerlink" title="vm与vc"></a>vm与vc</h2><ul>
+<li>vm是实例对象，如const vm = new Vue(options); data可以是一个对象/函数对象</li>
+<li>vc是组件实例对象，如Vue.component(options)、Vue.extend(options); data必须是一个函数对象。</li>
+<li>一个重要的内置关系：VueComponent.prototype.<strong> proto </strong> === Vue.prototype(让组件实例对象vc可以访问Vue原型上的属性、方法)</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vc组件实例跟下边vm实例对象区别：因为组件是可复用的 Vue 实例，所以它们与 new Vue 接收相同的选项，例如 data、computed、watch、methods 以及生命周期钩子等。仅有的例外是像 el 这样根实例特有的选项。</span></span><br><span class="line"><span class="keyword">const</span> vm = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">const</span> vm = <span class="keyword">new</span> Vue().$mount(<span class="string">'#app'</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a>修饰符</h2><ul>
+<li>事件修饰符，支持链式使用，passive和prevent冲突，不能同时绑定在一个监听器上</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/** </span><br><span class="line">.capture(捕获事件，父套子) </span><br><span class="line">.stop(阻止事件冒泡，子冒泡父) </span><br><span class="line">.self(event.target是当前操作元素才触发事件，避免捕获和冒泡事件触发) </span><br><span class="line">.prevent(阻止默认事件) </span><br><span class="line">.once(只触发一次) </span><br><span class="line">.passive(事件的默认行为立刻执行，无需等待事件回调执行完毕，如@scoll，@touchmove，@wheel防止页面卡顿) **/</span><br><span class="line">&lt;div @wheel.passive=&quot;wheel&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>键盘修饰符，Vue默认提供以下9个按键别名，未提供的可以用按键原始的key值去绑定，如 caps-lock(短横线命名)</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">.enter：回车键</span></span><br><span class="line"><span class="comment">.tab：制表键</span></span><br><span class="line"><span class="comment">.delete：含delete和backspace键</span></span><br><span class="line"><span class="comment">.esc：返回键</span></span><br><span class="line"><span class="comment">.space: 空格键</span></span><br><span class="line"><span class="comment">.up：向上键</span></span><br><span class="line"><span class="comment">.down：向下键</span></span><br><span class="line"><span class="comment">.left：向左键</span></span><br><span class="line"><span class="comment">.right：向右键</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>系统修饰符（用法特殊）: ctrl、alt、shift、meta(win/command)</p>
+<ol>
+<li><p>配合keyup使用，需要组合键释放了才能触发，例如ctrl+a</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div @keyup.ctrl=&quot;handler&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div @keyup.ctrl.a=&quot;handler&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配合keydown正常使用</p>
+</li>
+</ol>
+</li>
+<li><p>自定义键名，Vue.config.keyCodes.自定义键名(huiche) = 键码 （不推荐）</p>
+</li>
+<li><p>v-model修饰符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/** .lazy(转变为在change事件再同步) .number(自动将用户的输入值转化为数值类型) .trim(自动过滤用户输入的首尾空格) **/</span><br><span class="line">&lt;input v-model.lazy=&quot;msg&quot;&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自定义(第三方)组件修饰符 .native</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;input v-model=&quot;form.name&quot; placeholder=&quot;昵称&quot; @keyup.enter=&quot;submit&quot;&gt;</span><br><span class="line">&lt;el-input v-model=&quot;form.name&quot; placeholder=&quot;昵称&quot; @keyup.enter.native=&quot;submit&quot;&gt;&lt;/el-input&gt;</span><br><span class="line">&lt;!-- 会把click事件当成自定义事件，需要$emit(&apos;click&apos;)来触发 --&gt;</span><br><span class="line">&lt;my-component @click=&apos;handler&apos;&gt;&lt;/my-component&gt;</span><br><span class="line">&lt;!-- 会把click事件当成原生事件 --&gt;</span><br><span class="line">&lt;my-component @click.native=&apos;handler&apos;&gt;&lt;/my-component&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h2><ul>
+<li>定义：对要显示的数据进行特定格式式再显示（适用于一些简单逻辑的处理）</li>
+<li><p>语法：</p>
+<ol>
+<li><p>注册过滤器：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vue.filter(name, callback) 或 <span class="keyword">new</span> Vue(&#123; <span class="attr">filters</span>: &#123;&#125; &#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用过滤器：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; xxx | 过滤器名 &#125;&#125; 或 v-bind:属性=<span class="string">"xxx | 过滤器名"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>备注：</p>
+<ol>
+<li>过滤器也可以接收额外参数、多个过滤器也可以串联</li>
+<li>并没有改变原本的数据，是产生新的对应的数据</li>
+</ol>
+</li>
+</ul>
+<h2 id="props"><a href="#props" class="headerlink" title="props"></a>props</h2><ul>
+<li><p>单向数据流</p>
+<p>简单类型不允许直接改，复杂类型(引用地址)不能重新赋值，但能直接用v-model实现双向绑定(不建议)</p>
+</li>
+<li><p>不仅能传递数据，也能传递方法(不推荐)</p>
+<ol>
+<li><p>自定义事件 @eventName=handler <--> $emit(‘eventName’) </--></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 哪个vc $emit就由哪个vc解绑$off</span></span><br><span class="line"><span class="keyword">this</span>.$off(<span class="string">'eventName'</span>)  <span class="comment">// 解绑一个自定义事件</span></span><br><span class="line"><span class="keyword">this</span>.$off([<span class="string">'eventName1'</span>, <span class="string">'eventName2'</span>])  <span class="comment">// 解绑多个自定义事件</span></span><br><span class="line"><span class="keyword">this</span>.$off()  <span class="comment">// 解绑所有的自定义事件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// vc实例销毁会让所有自定义事件失效，但不影响默认事件，如click</span></span><br><span class="line"><span class="comment">// 注意：data绑定的数据也会失去响应式效果，即事件触发了页面不响应</span></span><br><span class="line"><span class="keyword">this</span>.$destroy()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>this.$refs.vc.$on(‘eventName’, function(){ console.log(this) }) </p>
+<p>谁派发谁监听，注意function里面的this指向this.$refs.vc，而不是指向当前写这行代码的vc组件实例。记住谁触发了自定义事件，事件回调当中的this就指向谁。 改写成：this.$refs.vc.$on(‘eventName’, () =&gt; {}) </p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="v-html"><a href="#v-html" class="headerlink" title="v-html"></a>v-html</h2><ul>
+<li><p>指令作用：向指定节点中渲染包含html结构的内容</p>
+</li>
+<li><p>与插值语法的区别：</p>
+<p>a. v-html会替换掉节点中所有的内容，不会</p>
+<p>b. v-html可以识别html结构，区别v-text指令</p>
+</li>
+<li><p>注意：v-html有安全性问题</p>
+<p>a. 在网站上动态渲染任意HTML是非常危险的，容易导致XSS攻击</p>
+<p>b. 一定要在可信的内容上使用v-html，永不要用在用户提交的内容上！</p>
+</li>
+<li><p><a href="https://chrome.google.com/webstore/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm?utm_source=chrome-ntp-icon" target="_blank" rel="noopener">Cookie-Editor</a></p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie <span class="comment">// 只显示非http-only的</span></span><br></pre></td></tr></table></figure>
+<h2 id="v-cloak"><a href="#v-cloak" class="headerlink" title="v-cloak"></a>v-cloak</h2><ul>
+<li>v-cloak指令（没有值）:<ol>
+<li>本质是一个特殊属性，Vue实例创建完比并接管容器后，会删掉v-cloak属性</li>
+<li>使用css配合v-cloak可以解决网速慢时页面展示出的问题</li>
+</ol>
+</li>
+<li>指令函数何时会被调用？（区别指令对象不同函数时机）<ol>
+<li>指令与元素成功绑定时</li>
+<li>指令所在的模板被重新解析时（任意数据变化）</li>
+</ol>
+</li>
+<li>注意：<ol>
+<li>指令函数无法使用data数据，它的this是指向window</li>
+<li>指令名如果是多个单词，要使用kebab-case(短横线)命名方式，不要用camelCase(小驼峰)命名方式（注意：定义组件名称(属性)也建议用kebab-case，大写组件名(属性)必须vue-cli脚手架才行，直接引入vue不行，自闭合组件标签同理，多个只会渲染一个）</li>
+<li>其它自带指令：v-once(只渲染一次)、v-pre(跳过编译)</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[v-cloak]</span> &#123;</span><br><span class="line">	<span class="attribute">display</span>: none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &lt;span v-big='n'&gt;&lt;/span&gt;</span></span><br><span class="line"><span class="comment">// &lt;input type="text" v-fbing:value="n"&gt;</span></span><br><span class="line"></span><br><span class="line">directives: &#123;</span><br><span class="line">  <span class="comment">// 指令函数，有bind和update效果</span></span><br><span class="line">	big(element, binding) &#123;</span><br><span class="line">		element.innerText = binding.value * <span class="number">10</span></span><br><span class="line">	&#125;</span><br><span class="line">  <span class="comment">// 指令对象</span></span><br><span class="line">	fbing: &#123;</span><br><span class="line">    <span class="comment">// 指令与元素成功绑定时</span></span><br><span class="line">		bind(element, binding) &#123;</span><br><span class="line">      element.value = binding.value</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 指令所在元素被插入页面时，需要在此阶段做特殊处理</span></span><br><span class="line">		inserted(element, binding) &#123;</span><br><span class="line">      element.focus()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 指令所在的模板被重新解析时（任意数据变化）</span></span><br><span class="line">		update(element, binding) &#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 全局指令</span></span><br><span class="line"><span class="comment">// Vue.directive('fbing', function() &#123;&#125;)  </span></span><br><span class="line"><span class="comment">// Vue.directive('fbing', &#123; &#125;)</span></span><br></pre></td></tr></table></figure>
+<h2 id="全局事件总线-eventBus"><a href="#全局事件总线-eventBus" class="headerlink" title="全局事件总线 eventBus"></a>全局事件总线 eventBus</h2><ul>
+<li>注意如果利用事件总线$on绑定自定义事件，需要自己手动在beforeDestroy钩子中触发$off解绑。常规下vc自身的$on绑定，在vm销毁下会自动清除自定义事件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vm = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  render: <span class="function"><span class="params">h</span> =&gt;</span> h(App),</span><br><span class="line">  beforeCreate() &#123;</span><br><span class="line">    Vue.prototype.$eventBus = <span class="keyword">this</span> <span class="comment">// 安装全局事件总线</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="v-for中的key的有什么作用？"><a href="#v-for中的key的有什么作用？" class="headerlink" title="v-for中的key的有什么作用？"></a>v-for中的key的有什么作用？</h2><ul>
+<li>虚拟DOM中key的作用:<ul>
+<li>key是虚拟DOM对象的标识，当数据发生变化时，Vue会根据【新数据】生成【新的虚拟DOM】，随后Vue进行【新虚拟DOM】与【旧虚拟DOM】的差异比较，比较规则如下：</li>
+</ul>
+</li>
+<li>对比规则：<ol>
+<li>旧虚拟DOM中找到了与新虚拟DOM相同的key:<ol>
+<li>若虚拟DOM中内容没变，直接使用之前的真实DOM！</li>
+<li>若虚拟DOM中内容变了，则生成新的真实DOM，随后替换页面中之前的真实DOM。</li>
+</ol>
+</li>
+<li>旧虚拟DOM中未找到与新虚拟DOM相同的key，创建新的真实DOM，随后渲染到页面。</li>
+</ol>
+</li>
+<li>用index作为key可能会引发的问题：<ol>
+<li>若对数据进行逆序添加、逆序删除等破坏顺序操作：会产生没有必要的真实DOM更新  ==》 界面效果没问题，但效率低</li>
+<li>如果结构中还包含输入类的DOM：会产生错误DOM更新 ==》 界面有问题</li>
+</ol>
+</li>
+<li>开发中如何选择key?<ol>
+<li>最好使用每条数据的唯一标识作为key，比如id、手机号、身份证号、学号等唯一值</li>
+<li>如果不存在对数据的逆序添加、逆序删除等破坏顺序操作，仅用于渲染列表用于展示，使用index作为key是没有问题的</li>
+</ol>
+</li>
+</ul>
+<h2 id="模拟一个数据监测"><a href="#模拟一个数据监测" class="headerlink" title="模拟一个数据监测"></a>模拟一个数据监测</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> data = &#123;</span><br><span class="line">	name: <span class="string">'jam'</span>,</span><br><span class="line">  age: <span class="string">'20'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对象响应式，vue2基于Object.defineProperty(obj, prop, descriptor)，vue3基于new Proxy(target, handler)</span></span><br><span class="line"><span class="comment">// 错误示范，死循环</span></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(data, <span class="string">'name'</span>, &#123;</span><br><span class="line">	<span class="keyword">get</span>() &#123;</span><br><span class="line">		<span class="keyword">return</span> data.name;</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="keyword">set</span>(val) &#123;</span><br><span class="line">		data.name = val;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">                </span><br><span class="line"><span class="comment">// 创建一个监视的实例对象，用于监视data中的属性的变化</span></span><br><span class="line"><span class="keyword">const</span> ob = <span class="keyword">new</span> Observer(data);</span><br><span class="line">funtion Observer(obj) &#123;</span><br><span class="line">  <span class="comment">// 汇总对象中所有的属性形成一个数组</span></span><br><span class="line">  <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(obj);</span><br><span class="line">  <span class="comment">// 遍历</span></span><br><span class="line">  keys.forEach(<span class="function"><span class="params">k</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">Object</span>.defaineProperty(<span class="keyword">this</span>, k, &#123;</span><br><span class="line">      <span class="keyword">get</span>() &#123;</span><br><span class="line">        <span class="keyword">return</span> obj[k];</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="keyword">set</span>(val) &#123;</span><br><span class="line">        obj[k] = val;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">               </span><br><span class="line"><span class="comment">// const vm = new Vue(&#123;&#125;) </span></span><br><span class="line"><span class="comment">// vm.data.name = vm._data.name // _data 实际就是一个ob实例对象</span></span><br></pre></td></tr></table></figure>
+<h2 id="数据双向绑定响应"><a href="#数据双向绑定响应" class="headerlink" title="数据双向绑定响应"></a>数据双向绑定响应</h2><ul>
+<li>Vue会监视数据的原理：</li>
+</ul>
+<ol>
+<li><p>vue会监视data中所有层次的数据</p>
+</li>
+<li><p>如何监测对象中的数据？</p>
+<p>通过setter实现监视，且要在new Vue时就传入要监测的数据。</p>
+<p>a. 对象中后追加的属性，Vue默认不做响应式处理</p>
+<p>b. 如需给后添加的属性做响应式，请使用如下API：</p>
+<p>​    Vue.set(target, propertyName/index, value) </p>
+<p>​    vm.$set(target, propertyName/index, value)</p>
+</li>
+<li><p>如何监测数据中的数据？</p>
+<p>通过包裹数组更新元素的方法实现，本质就是做了两件事：</p>
+<p>a. 调用原生对应的方法对数组进行更新</p>
+<p>b. 重新解析模板，进而更新页面</p>
+</li>
+<li><p>在Vue修改数据中的某个元素一定要用如下方法：</p>
+<p>a. 使用这些变更方法API：push()、pop()、shift()、unshift()、splice()、sort()、reverse()，注意：变更方法，顾名思义，会变更调用了这些方法的原始数组。相比之下，也有非变更方法，例如 <code>filter()</code>、<code>concat()</code> 和 <code>slice()</code>。它们不会变更原始数组，而<strong>总是返回一个新数组</strong>。当使用非变更方法时，可以用新数组替换旧数组：</p>
+<p>b. Vue.set() 或 vm.$set()</p>
+</li>
+</ol>
+<p>特别注意：Vue.set()和vm.$set()不能给vm或vm的根数据对象添加属性！！！</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vm = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    data: &#123;</span><br><span class="line">        name: <span class="string">'jam'</span>,</span><br><span class="line">        info: &#123;</span><br><span class="line">            name: <span class="string">'xx'</span></span><br><span class="line">        &#125;,</span><br><span class="line">        arrInfo: [&#123; <span class="attr">name</span>: <span class="string">'xx'</span>&#125;],</span><br><span class="line">        arr: [<span class="string">'吃饭'</span>, <span class="string">'学习'</span>, <span class="string">'睡觉'</span>]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">this</span>.$<span class="keyword">set</span>(vm, 'age', 20);  // error</span><br><span class="line">this.$<span class="keyword">set</span>(vm.data, 'age', 20);  // error</span><br><span class="line">this.$<span class="keyword">set</span>(vm.data.info, 'age', 20);  // error</span><br><span class="line">// 数组对象，Object.defineProperty，有<span class="keyword">get</span> <span class="keyword">set</span></span><br><span class="line">vm.data.arrInfo[0].name = 'jam';</span><br><span class="line">vm.data.arrInfo[0] = &#123; name: <span class="string">'jam'</span> &#125;; <span class="comment">// 不能实时响应</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 数组包装劫持7个原型方法，push、pop、unshift、shift、splice、sort、reverse能够监测到数组数据变化</span></span><br><span class="line">vm.data.arr[<span class="number">0</span>] = <span class="string">'饿肚子'</span>; <span class="comment">// 不能实时响应</span></span><br><span class="line">vm.data.arr.splice(<span class="number">0</span>, <span class="number">1</span>, &#123; <span class="attr">name</span>: <span class="string">'jam'</span> &#125;); <span class="comment">// 能实时响应</span></span><br></pre></td></tr></table></figure>
+</div><div class="tags"><a href="/tags/框架/">框架</a></div><div class="post-share"></div><div class="post-nav"><a href="/2021/07/14/项目管理精华/" class="next">项目管理精华 - 科丽·科歌昂、叙泽特·布莱克莫尔、詹姆士·伍德</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#风格指南"><span class="toc-text">风格指南</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境配置"><span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vm与vc"><span class="toc-text">vm与vc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修饰符"><span class="toc-text">修饰符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过滤器"><span class="toc-text">过滤器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#props"><span class="toc-text">props</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-html"><span class="toc-text">v-html</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-cloak"><span class="toc-text">v-cloak</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全局事件总线-eventBus"><span class="toc-text">全局事件总线 eventBus</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-for中的key的有什么作用？"><span class="toc-text">v-for中的key的有什么作用？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模拟一个数据监测"><span class="toc-text">模拟一个数据监测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据双向绑定响应"><span class="toc-text">数据双向绑定响应</span></a></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2021/08/11/Vue的旁门左道/">Vue的旁门左道</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/07/14/项目管理精华/">项目管理精华 - 科丽·科歌昂、叙泽特·布莱克莫尔、詹姆士·伍德</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/06/04/如何阅读一本书/">如何阅读一本书 - 莫提默·J.艾德勒</a></li><li class="post-list-item"><a class="post-list-link" href="/2021/04/22/沟通训练营/">沟通训练营</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/20/typescript学习笔记/">typescript学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/12/阐述__proto__和prototype的关系/">阐述__proto__和prototype的关系</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/03/求无序数组第几大的数字/">求无序数组第几大的数字</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/13/call、apply、bind探索之路/">call、apply、bind探索之路</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/25/vue学习心得/">vue2.0学习心得</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/04/js基础和设计模式/">js基础和设计模式</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-gui"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Jquery/">Jquery</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mockjs/">Mockjs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Seajs/">Seajs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/css/">css</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/gulp/">gulp</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/less/">less</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/react/">react</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/requirejs/">requirejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/typescript/">typescript</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/webpack/">webpack</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习/">学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/插件/">插件</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/笔记/">笔记</a><span class="category-list-count">5</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="https://github.com/liwenxin-jam/" title="个人github" target="_blank">个人github</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><span> Copyright &copy;<a href="/." rel="nofollow">黎文欣.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script></body></html>
